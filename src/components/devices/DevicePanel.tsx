@@ -6,13 +6,12 @@ import { useApp, isLow } from "../../lib/app";
 import { useSettings } from "../../lib/settings";
 import { ConfirmDialog } from "../common";
 import { WindowControls } from "../Toolbar";
-import { DeviceIcon, Monitor, PanelRight } from "../icons";
+import { DeviceIcon, Monitor } from "../icons";
 import { Sensitive } from "./controls/primitives";
 import { StatusDot } from "./Battery";
 
 export function DevicePanel({ device }: { device: Device | undefined }) {
   const { t } = useSettings();
-  const { togglePanel } = useApp();
   return (
     <aside className="panel">
       <div className="panel-header" data-tauri-drag-region>
@@ -20,9 +19,8 @@ export function DevicePanel({ device }: { device: Device | undefined }) {
           {device ? t("details") : t("overview")}
         </span>
         <div className="toolbar-spacer" data-tauri-drag-region />
-        <button className="icon-button small" title={`${t("togglePanel")} (.)`} aria-label={t("togglePanel")} onClick={togglePanel}>
-          <PanelRight />
-        </button>
+        {/* As in Notes: the panel toggle stays in the toolbar, so the header only has its title and,
+            on the desktop, the window buttons. */}
         {isTauri && <WindowControls />}
       </div>
       <div className="panel-body">{device ? <Details device={device} /> : <Summary />}</div>

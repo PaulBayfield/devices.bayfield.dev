@@ -812,18 +812,11 @@
   align-self: stretch;
   margin-left: 6px;
 }
-/* The side panel is 300 px wide: slightly narrower buttons, and a title that shortens rather than
-   pushing the close button out of the window ("Vue d'ensemble"). */
-.panel-header .window-controls button {
-  width: 40px;
-}
+/* A long title ("Vue d'ensemble") shortens rather than pushing the window buttons out of the window. */
 .panel-header .panel-label {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.panel-header > .icon-button {
-  flex: none;
 }
 .window-controls button {
   width: 46px;
