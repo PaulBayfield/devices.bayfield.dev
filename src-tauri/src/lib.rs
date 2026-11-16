@@ -6,6 +6,7 @@
 //! - The agent, started with the app and kept running (see agent.rs).
 
 mod agent;
+mod prefs;
 mod shell;
 
 use serde::{Deserialize, Serialize};
@@ -85,7 +86,9 @@ pub fn run() {
             agent::agent_info,
             agent::agent_link,
             agent::agent_unlink,
-            agent::agent_stop
+            agent::agent_stop,
+            prefs::prefs_token_get,
+            prefs::prefs_token_set
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

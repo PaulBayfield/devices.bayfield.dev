@@ -43,7 +43,8 @@ app.use(
       scriptSrc: ["'self'", ...inlineScripts],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "blob:"],
-      connectSrc: ["'self'"],
+      // prefs.bayfield.dev: the theme and language shared with the other apps.
+      connectSrc: ["'self'", "https://prefs.bayfield.dev"],
       // model-viewer (the 3D mouse) decodes in workers it creates from blobs.
       workerSrc: ["'self'", "blob:"],
       frameAncestors: ["'none'"],

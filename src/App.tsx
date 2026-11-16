@@ -7,6 +7,7 @@ import { useRouter } from "./lib/router";
 import { SettingsProvider, useSettings } from "./lib/settings";
 import { loadConnection, saveConnection, useDesktopSync } from "./lib/desktop";
 import { useLowBatteryNotifications } from "./lib/notifications";
+import { usePrefsSync } from "./lib/prefs";
 import { ToastProvider, useToast } from "./components/common";
 import { Sidebar } from "./components/Sidebar";
 import { SignIn } from "./components/SignIn";
@@ -75,6 +76,8 @@ function SignedIn({ onDisconnected }: { onDisconnected: () => void }) {
 
 function Shell({ me, setMe, router, onSignedOut }: { me: Me; setMe: (me: Me) => void; router: ReturnType<typeof useRouter>; onSignedOut: () => void }) {
   const { settings, update, t } = useSettings();
+  // Theme and language are shared with the other bayfield.dev apps (prefs.bayfield.dev).
+  usePrefsSync({ theme: settings.theme, language: settings.language }, update);
   const toast = useToast();
   const mobile = useMediaQuery(MOBILE_QUERY);
   const [drawer, setDrawer] = useState(false);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { connectPrefs, disconnectPrefs, usePrefsStatus } from "../../lib/prefs";
 import { notificationsAllowed } from "../../lib/notifications";
 import { api, ApiError, isTauri, serverUrl, type ApiKey, type Session } from "../../lib/api";
 import { linkThisComputer, unlinkAgent } from "../../lib/agent";
@@ -98,8 +99,41 @@ export function PreferencesPage() {
           <Switch checked={settings.hideIdentifiers} onChange={(hideIdentifiers) => update({ hideIdentifiers })} label={t("hideIdentifiers")} />
         </Row>
       </section>
+      <PrefsSyncRow />
       {isTauri && <DesktopPreferences />}
     </>
+  );
+}
+
+/** Theme and language shared with the other bayfield.dev apps, through prefs.bayfield.dev. */
+function PrefsSyncRow() {
+  const { t } = useSettings();
+  const { status, email } = usePrefsStatus();
+  // Names this computer in prefs.bayfield.dev's list ("Devices on PAUL-PC").
+  const computer = useApp().local.info?.computer ?? "";
+  const hint =
+    status === "connected"
+      ? t("prefsConnected", { email: email ?? "" })
+      : status === "connecting"
+        ? t("prefsApprove")
+        : status === "offline"
+          ? t("prefsOffline")
+          : t("prefsHint");
+  return (
+    <section className="settings-rows">
+      <h3>{t("prefsTitle")}</h3>
+      <Row label={t("prefsLabel")} hint={hint}>
+        {status === "connected" ? (
+          <button className="text-button" onClick={() => void disconnectPrefs()}>
+            {t("prefsDisconnect")}
+          </button>
+        ) : status === "disconnected" || status === "connecting" ? (
+          <button className="primary-button" onClick={() => void connectPrefs(computer ? `Devices on ${computer}` : "Devices")}>
+            {t("prefsConnect")}
+          </button>
+        ) : null}
+      </Row>
+    </section>
   );
 }
 
