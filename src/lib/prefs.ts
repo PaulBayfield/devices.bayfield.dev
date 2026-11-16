@@ -128,7 +128,8 @@ let linking: AbortController | null = null;
 
 /**
  * Connects this browser (a trip through prefs.bayfield.dev and back) or this computer (approved
- * in the browser; the app waits for it). `appName` names it in the list there ("Devices on PAUL-PC").
+ * in the browser; the app waits for it). `appName` names it in the list there, with the
+ * computer's name: "Notes on PAUL-PC".
  */
 export async function connectPrefs(appName: string): Promise<void> {
   if (!isTauri) {
@@ -139,7 +140,9 @@ export async function connectPrefs(appName: string): Promise<void> {
   const abort = new AbortController();
   linking = abort;
   const secret = base64url(crypto.getRandomValues(new Uint8Array(32)));
-  const url = `${PREFS_URL}/link?challenge=${await sha256Hex(secret)}&name=${encodeURIComponent(appName)}`;
+  const computer = await invoke<string>("prefs_computer_name").catch(() => "");
+  const name = computer ? `${appName} on ${computer}` : appName;
+  const url = `${PREFS_URL}/link?challenge=${await sha256Hex(secret)}&name=${encodeURIComponent(name)}`;
   const { openUrl } = await import("@tauri-apps/plugin-opener");
   await openUrl(url);
   setState({ status: "connecting" });

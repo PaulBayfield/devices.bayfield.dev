@@ -31,3 +31,9 @@ pub fn prefs_token_set(token: Option<String>) -> Result<(), String> {
         },
     }
 }
+
+/// This computer's name, to tell it apart in prefs.bayfield.dev's list ("Notes on PAUL-PC").
+#[tauri::command]
+pub fn prefs_computer_name() -> String {
+    std::env::var("COMPUTERNAME").or_else(|_| std::env::var("HOSTNAME")).unwrap_or_default()
+}

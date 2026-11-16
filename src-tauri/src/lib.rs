@@ -88,7 +88,8 @@ pub fn run() {
             agent::agent_unlink,
             agent::agent_stop,
             prefs::prefs_token_get,
-            prefs::prefs_token_set
+            prefs::prefs_token_set,
+            prefs::prefs_computer_name
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

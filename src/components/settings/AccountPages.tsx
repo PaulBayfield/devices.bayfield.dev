@@ -109,8 +109,6 @@ export function PreferencesPage() {
 function PrefsSyncRow() {
   const { t } = useSettings();
   const { status, email } = usePrefsStatus();
-  // Names this computer in prefs.bayfield.dev's list ("Devices on PAUL-PC").
-  const computer = useApp().local.info?.computer ?? "";
   const hint =
     status === "connected"
       ? t("prefsConnected", { email: email ?? "" })
@@ -128,7 +126,7 @@ function PrefsSyncRow() {
             {t("prefsDisconnect")}
           </button>
         ) : status === "disconnected" || status === "connecting" ? (
-          <button className="primary-button" onClick={() => void connectPrefs(computer ? `Devices on ${computer}` : "Devices")}>
+          <button className="primary-button" onClick={() => void connectPrefs("Devices")}>
             {t("prefsConnect")}
           </button>
         ) : null}
