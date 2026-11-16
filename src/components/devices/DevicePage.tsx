@@ -76,6 +76,8 @@ export function DevicePage({ device }: { device: Device }) {
 
       {device.vendor === "phonelink" ? (
         <p className="card muted">{t("phoneLinkInfo", { model: settings?.info?.model ?? device.model, computer: device.host?.name ?? "?" })}</p>
+      ) : device.vendor === "gps" ? (
+        <p className="card muted">{t("gpsInfo")}</p>
       ) : !device.connected ? (
         <p className="card muted">
           {t("notConnectedSettings", { name: device.name })}
