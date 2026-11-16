@@ -1,6 +1,6 @@
 [package]
 name = "devices"
-version = "0.3.4"
+version = "0.3.5"
 description = "Batteries and settings of wireless devices, from every computer"
 authors = ["bayfield"]
 edition = "2024"
