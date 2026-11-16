@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { notificationsAllowed } from "../../lib/notifications";
 import { api, ApiError, isTauri, serverUrl, type ApiKey, type Session } from "../../lib/api";
 import { linkThisComputer, unlinkAgent } from "../../lib/agent";
 import { getAutostart, openExternal, setAutostart } from "../../lib/desktop";
@@ -113,6 +114,17 @@ function DesktopPreferences() {
       <h3>{t("desktop")}</h3>
       <Row label={t("closeToTray")} hint={t("closeToTrayHint")}>
         <Switch checked={settings.closeToTray} onChange={(closeToTray) => update({ closeToTray })} label={t("closeToTray")} />
+      </Row>
+      <Row label={t("lowBatteryNotifications")} hint={t("lowBatteryNotificationsHint")}>
+        <Switch
+          checked={settings.lowBatteryNotifications}
+          label={t("lowBatteryNotifications")}
+          onChange={(on) => {
+            update({ lowBatteryNotifications: on });
+            // Asked when turned on, rather than out of the blue at the first low battery.
+            if (on) void notificationsAllowed(true);
+          }}
+        />
       </Row>
       <Row label={t("autostart")} hint={t("autostartHint")} disabled={autostart === null}>
         <Switch

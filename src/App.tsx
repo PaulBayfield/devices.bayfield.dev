@@ -6,6 +6,7 @@ import { MOBILE_QUERY, invalidate, useApi, useMediaQuery } from "./lib/hooks";
 import { useRouter } from "./lib/router";
 import { SettingsProvider, useSettings } from "./lib/settings";
 import { loadConnection, saveConnection, useDesktopSync } from "./lib/desktop";
+import { useLowBatteryNotifications } from "./lib/notifications";
 import { ToastProvider, useToast } from "./components/common";
 import { Sidebar } from "./components/Sidebar";
 import { SignIn } from "./components/SignIn";
@@ -125,6 +126,7 @@ function Shell({ me, setMe, router, onSignedOut }: { me: Me; setMe: (me: Me) => 
     [overview, list, hostId, settings.showOffline, settings.sort],
   );
   const device = r.name === "device" ? overview?.devices.find((d) => d.id === r.id) : undefined;
+  useLowBatteryNotifications(overview?.devices, settings.lowBatteryNotifications, t);
 
   useEffect(() => setDrawer(false), [r]);
 

@@ -20,6 +20,8 @@ export interface Settings {
   hideIdentifiers: boolean;
   /** Desktop: keep running in the tray when the window is closed. */
   closeToTray: boolean;
+  /** Desktop: a notification when a device drops to 20 %, then 10 %. */
+  lowBatteryNotifications: boolean;
 }
 
 const STORAGE_KEY = "devices.settings";
@@ -34,6 +36,7 @@ const DEFAULTS: Settings = {
   showOffline: true,
   hideIdentifiers: true,
   closeToTray: true,
+  lowBatteryNotifications: true,
 };
 
 function load(): Settings {
