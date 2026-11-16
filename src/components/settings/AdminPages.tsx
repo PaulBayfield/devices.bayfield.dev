@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { api, serverUrl, type Host, type InternalStatus, type UserRow } from "../../lib/api";
+import { api, isTauri, serverUrl, type Host, type InternalStatus, type UserRow } from "../../lib/api";
 import { useApp } from "../../lib/app";
 import { invalidate, useApi } from "../../lib/hooks";
 import { useSettings } from "../../lib/settings";
 import type { StringKey } from "../../lib/i18n";
-import type { UpdateCheck } from "../../lib/updates";
+import { useDesktopUpdate, type UpdateCheck } from "../../lib/updates";
 import { ConfirmDialog, CopyButton, useToast } from "../common";
 import { ExternalLink, Key, Pencil, Trash } from "../icons";
 import { PageHeader, Row, WebOnly } from "./common";
@@ -354,6 +354,7 @@ export function AboutPage({ updates }: { updates: UpdateCheck }) {
             )
           )}
         </Row>
+        {isTauri && <DesktopUpdateRow />}
         <Row label={t("allVersions")}>
           <a className="text-button" href={status?.releasesUrl || "https://github.com/PaulBayfield/devices.bayfield.dev/releases"} target="_blank" rel="noreferrer">
             <ExternalLink size={14} />
@@ -368,5 +369,36 @@ export function AboutPage({ updates }: { updates: UpdateCheck }) {
         </Row>
       </section>
     </>
+  );
+}
+
+/** Desktop app: its own version against the latest release, installed in place from here. */
+function DesktopUpdateRow() {
+  const { t } = useSettings();
+  const { state, check, install } = useDesktopUpdate();
+  const hint =
+    state.status === "checking"
+      ? t("checkingUpdates")
+      : state.status === "available"
+        ? t("desktopUpdateAvailable", { version: state.version })
+        : state.status === "downloading"
+          ? t("downloadingUpdate", { percent: state.progress === null ? "" : `${Math.round(state.progress * 100)} %` })
+          : state.status === "installing"
+            ? t("installingUpdate")
+            : state.status === "error"
+              ? t("desktopUpdateFailed")
+              : t("desktopUpToDate", { version: __APP_VERSION__ });
+  return (
+    <Row label={t("desktop")} hint={hint}>
+      {state.status === "available" ? (
+        <button className="primary-button" onClick={() => void install()}>
+          {t("installUpdate")}
+        </button>
+      ) : state.status === "upToDate" || state.status === "error" ? (
+        <button className="text-button" onClick={() => void check()}>
+          {t("checkForUpdates")}
+        </button>
+      ) : null}
+    </Row>
   );
 }

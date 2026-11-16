@@ -60,12 +60,17 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_process::init())
         .manage(agent::AgentState::default())
         .plugin(tauri_plugin_autostart::init(
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec![shell::MINIMIZED_ARG]),
         ))
         .setup(|app| {
+            // Updates install in place over the current version (same folder, shortcuts and
+            // taskbar pin), from the signed artifacts attached to each GitHub release.
+            #[cfg(desktop)]
+            app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
             shell::setup(app)?;
             agent::start(app.handle());
             Ok(())
@@ -79,7 +84,8 @@ pub fn run() {
             agent::agent_request,
             agent::agent_info,
             agent::agent_link,
-            agent::agent_unlink
+            agent::agent_unlink,
+            agent::agent_stop
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

@@ -185,6 +185,13 @@ pub fn shutdown(app: &AppHandle) {
     stop(app);
 }
 
+/// Stops the agent for good before an update installs, so the installer can replace its files
+/// (the app exits right after, without the usual exit event).
+#[tauri::command]
+pub fn agent_stop(app: AppHandle) {
+    shutdown(&app);
+}
+
 /// Sends a request to the agent and waits for its answer: the result, or the agent's error.
 #[tauri::command]
 pub async fn agent_request(app: AppHandle, method: String, params: Option<Value>) -> Result<Value, Value> {
