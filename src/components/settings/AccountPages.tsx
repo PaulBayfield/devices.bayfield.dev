@@ -73,7 +73,7 @@ export function PreferencesPage() {
                 <span />
                 <span />
               </span>
-              {t(`theme_${id}` as StringKey)}
+              <span className="theme-card-name">{t(`theme_${id}` as StringKey)}</span>
             </button>
           ))}
           {settings.customThemes.map((theme) => {
